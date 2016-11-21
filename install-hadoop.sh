@@ -16,14 +16,9 @@ chown -R root:hadoop /usr/local/hadoop
 chown -R root:hadoop ./hadoop-2.7.3
 
 #   Update Permissions Explicitly
-#find /hadoop-2.7.3/bin -type f -exec chmod 755 {} \;
-#find /hadoop-2.7.3/sbin -type f -exec chmod 755 {} \;
-#find /hadoop-2.7.3/etc/hadoop -type f -exec chmod 644 {} \;
-#find /hadoop-2.7.3/share -type f -exec chmod 644 {} \;
-#find /hadoop-2.7.3/share -type d -exec chmod 755 {} \;
-#find /hadoop-2.7.3/include -type f -exec chmod 644 {} \;
-#find /hadoop-2.7.3/lib/native/*.a -type f -exec chmod 644 {} \;
-#find /hadoop-2.7.3/lib/native/*.so.* -type f -exec chmod 755 {} \;
+find ./hadoop-2.7.3/etc/hadoop -type f -exec chmod 664 {} \;
+find ./hadoop-2.7.3 -type d -exec chmod 775 {} \;
+find ./ -type d -exec chmod 775 {} \;
 
 #   Extract and update owner
 tar -zxvf jdk-8u111-linux-x64.tar.gz
@@ -31,15 +26,14 @@ chown -R root:hadoop ./jdk1.8.0_111
 rm -f /usr/bin/java
 rm -f /usr/bin/javac
 rm -f /usr/lib/jvm/jdk1.8.0_111
+rm -f /usr/local/jvm
 mkdir -p /usr/lib/jvm/
 ln -s /home/gv8/install/jdk1.8.0_111/bin/java /usr/bin/java
 ln -s /home/gv8/install/jdk1.8.0_111/bin/javac /usr/bin/javac
 ln -s /home/gv8/install/jdk1.8.0_111/ /usr/lib/jvm/jdk1.8.0_111
+ln -s /usr/lib/jvm /usr/local/jvm
 chown -R root:hadoop /usr/lib/jvm/jdk1.8.0_111
-
-#   Update Permissions
-#find ./jdk1.8.0_111/bin -type f -exec chmod 755 {} \;
-#find ./jdk1.8.0_111/bin -type f -exec chmod 755 {} \;
+chown -R root:hadoop /usr/local/jvm
 
 mkdir -p /usr/share/hdfs
 chown -R root:hadoop /usr/share/hdfs
@@ -95,3 +89,4 @@ fi
 
 cp ./mapred-site.xml $HADOOP_CONF_DIR/mapred-site.xml
 cp ./yarn-site.xml $HADOOP_CONF_DIR/yarn-site.xml
+
