@@ -15,7 +15,7 @@ ln -s /home/gv8/install/hadoop-2.7.3 /usr/local/hadoop
 chown -R root:hadoop /usr/local/hadoop
 chown -R root:hadoop ./hadoop-2.7.3
 
-#   Update Permissions Explicitly
+#   Update Permissions to Hadoop Folders Explicitly
 find ./hadoop-2.7.3/etc/hadoop -type f -exec chmod 664 {} \;
 find ./hadoop-2.7.3 -type d -exec chmod 775 {} \;
 find ./ -type d -exec chmod 775 {} \;
@@ -35,15 +35,24 @@ ln -s /usr/lib/jvm /usr/local/jvm
 chown -R root:hadoop /usr/lib/jvm/jdk1.8.0_111
 chown -R root:hadoop /usr/local/jvm
 
+#   Allow anyone in group hadoop to access HDFS
 mkdir -p /usr/share/hdfs
 chown -R root:hadoop /usr/share/hdfs
 chmod 775 /usr/share/hdfs
 
-#   Update machine bash profile
-cp /etc/profile /etc/profile-backup
-
+#   Convenient variables
 export HADOOP_HOME=/usr/local/hadoop
 export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_111
+export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+
+#   Update machine bash profile
+
+if [ ! -f /etc/profile-backup-hadoopinstall ];
+then
+    cp /etc/profile /etc/profile-backup-hadoopinstall
+else
+    cat /etc/profile-backup-hadoopinstall > /etc/profile
+fi
 
 #   Sets Hadoop Variables
 echo "export HADOOP_HOME=/usr/local/hadoop" >> /etc/profile
@@ -57,15 +66,18 @@ echo "export YARN_HOME=$HADOOP_HOME" >> /etc/profile
 echo "export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_111" >> /etc/profile
 echo "export PATH=$PATH:$HADOOP_HOME/bin:$JAVA_HOME/bin" >> /etc/profile
 
-export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
-
+#   Set master
 echo "weenie-master" > $HADOOP_CONF_DIR/masters
+
+#   If master add ourself to slaves
+rm -f $HADOOP_CONF_DIR/slaves
 
 if [ $1="master" ]
   then
     echo "weenie-master" >> $HADOOP_CONF_DIR/slaves
 fi
 
+#   Get our slaves and add to slaves
 tail -n +2 hosts > slavehosts
 
 N=16;
@@ -74,6 +86,9 @@ cat slavehosts | grep -o ".\{$N\}$" > slavehostnames
 while read line; do
     echo $line >> $HADOOP_CONF_DIR/slaves
 done < slavehostnames
+
+
+#   Copy all .xml files into config
 
 cp ./core-site.xml $HADOOP_CONF_DIR/
 
@@ -89,4 +104,9 @@ fi
 
 cp ./mapred-site.xml $HADOOP_CONF_DIR/mapred-site.xml
 cp ./yarn-site.xml $HADOOP_CONF_DIR/yarn-site.xml
+cp ./hadoop-env.sh $HADOOP_CONF_DIR/hadoop-env.sh
+
+echo "Installation complete, please type: 'source /etc/profile' to update path variables"
+echo "If you need to run this again, please remove changes to:"
+echo "    /etc/hosts"
 
