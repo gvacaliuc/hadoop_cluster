@@ -1,0 +1,5 @@
+slavehosts
+slavehostnames
+*.tar.gz
+hadoop-*.*.*
+jdk*
