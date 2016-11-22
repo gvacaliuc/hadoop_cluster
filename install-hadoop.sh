@@ -14,6 +14,9 @@ export INSTALL_DIR=$INSTALL_FOLDER/install
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 
+chmod 775 $INSTALL_DIR
+chown -R root:hadoop $INSTALL_DIR
+
 #   Extract and update owner
 tar -zxvf hadoop-2.7.3.tar.gz -C $INSTALL_DIR
 rm -f /usr/local/hadoop
