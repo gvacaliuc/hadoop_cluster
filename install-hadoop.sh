@@ -8,8 +8,8 @@ done <hosts
 
 service sshd restart
 
-export $INSTALL_FOLDER=/home/gv8
-export $INSTALL_DIR=$INSTALL_FOLDER/install
+export INSTALL_FOLDER=/home/gv8
+export INSTALL_DIR=$INSTALL_FOLDER/install
 
 rm -rf $INSTALL_DIR
 mkdir $INSTALL_DIR
