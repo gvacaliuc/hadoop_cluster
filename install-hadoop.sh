@@ -8,32 +8,35 @@ done <hosts
 
 service sshd restart
 
-rm -rf /home/gv8/install
-mkdir /home/gv8/install
+export $INSTALL_FOLDER=/home/gv8
+export $INSTALL_DIR=$INSTALL_FOLDER/install
+
+rm -rf $INSTALL_DIR
+mkdir $INSTALL_DIR
 
 #   Extract and update owner
-tar -zxvf hadoop-2.7.3.tar.gz -C /home/gv8/install
+tar -zxvf hadoop-2.7.3.tar.gz -C $INSTALL_DIR
 rm -f /usr/local/hadoop
-ln -s /home/gv8/install/hadoop-2.7.3 /usr/local/hadoop
+ln -s $INSTALL_DIR/hadoop-2.7.3 /usr/local/hadoop
 chown -R root:hadoop /usr/local/hadoop
-chown -R root:hadoop ./hadoop-2.7.3
+chown -R root:hadoop $INSTALL_DIR/hadoop-2.7.3
 
 #   Update Permissions to Hadoop Folders Explicitly
-find ./hadoop-2.7.3/etc/hadoop -type f -exec chmod 664 {} \;
-find ./hadoop-2.7.3 -type d -exec chmod 775 {} \;
-find ./ -type d -exec chmod 775 {} \;
+find $INSTALL_DIR/hadoop-2.7.3/etc/hadoop -type f -exec chmod 664 {} \;
+find $INSTALL_DIR/hadoop-2.7.3 -type d -exec chmod 775 {} \;
+find $INSTALL_DIR/ -type d -exec chmod 775 {} \;
 
 #   Extract and update owner
 tar -zxvf jdk-8u111-linux-x64.tar.gz -C /home/gv8/install
-chown -R root:hadoop ./jdk1.8.0_111
+chown -R root:hadoop $INSTALL_DIR/jdk1.8.0_111
 rm -f /usr/bin/java
 rm -f /usr/bin/javac
 rm -f /usr/lib/jvm/jdk1.8.0_111
 rm -f /usr/local/jvm
 mkdir -p /usr/lib/jvm/
-ln -s /home/gv8/install/jdk1.8.0_111/bin/java /usr/bin/java
-ln -s /home/gv8/install/jdk1.8.0_111/bin/javac /usr/bin/javac
-ln -s /home/gv8/install/jdk1.8.0_111/ /usr/lib/jvm/jdk1.8.0_111
+ln -s $INSTALL_DIR/jdk1.8.0_111/bin/java /usr/bin/java
+ln -s $INSTALL_DIR/jdk1.8.0_111/bin/javac /usr/bin/javac
+ln -s $INSTALL_DIR/jdk1.8.0_111/ /usr/lib/jvm/jdk1.8.0_111
 ln -s /usr/lib/jvm /usr/local/jvm
 chown -R root:hadoop /usr/lib/jvm/jdk1.8.0_111
 chown -R root:hadoop /usr/local/jvm
