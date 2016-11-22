@@ -8,11 +8,11 @@ done <hosts
 
 service sshd restart
 
-export INSTALL_FOLDER=/home/gv8
+export INSTALL_FOLDER=/usr
 export INSTALL_DIR=$INSTALL_FOLDER/install
 
 rm -rf $INSTALL_DIR
-mkdir $INSTALL_DIR
+mkdir -p $INSTALL_DIR
 
 #   Extract and update owner
 tar -zxvf hadoop-2.7.3.tar.gz -C $INSTALL_DIR
@@ -24,10 +24,10 @@ chown -R root:hadoop $INSTALL_DIR/hadoop-2.7.3
 #   Update Permissions to Hadoop Folders Explicitly
 find $INSTALL_DIR/hadoop-2.7.3/etc/hadoop -type f -exec chmod 664 {} \;
 find $INSTALL_DIR/hadoop-2.7.3 -type d -exec chmod 775 {} \;
-find $INSTALL_DIR/ -type d -exec chmod 775 {} \;
+chmod 775 $INSTALL_DIR/hadoop-2.7.3
 
 #   Extract and update owner
-tar -zxvf jdk-8u111-linux-x64.tar.gz -C /home/gv8/install
+tar -zxvf jdk-8u111-linux-x64.tar.gz -C $INSTALL_DIR
 chown -R root:hadoop $INSTALL_DIR/jdk1.8.0_111
 rm -f /usr/bin/java
 rm -f /usr/bin/javac
