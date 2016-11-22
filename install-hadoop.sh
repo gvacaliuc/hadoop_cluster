@@ -8,8 +8,11 @@ done <hosts
 
 service sshd restart
 
+rm -rf /home/gv8/install
+mkdir /home/gv8/install
+
 #   Extract and update owner
-tar -zxvf hadoop-2.7.3.tar.gz
+tar -zxvf hadoop-2.7.3.tar.gz -C /home/gv8/install
 rm -f /usr/local/hadoop
 ln -s /home/gv8/install/hadoop-2.7.3 /usr/local/hadoop
 chown -R root:hadoop /usr/local/hadoop
@@ -21,7 +24,7 @@ find ./hadoop-2.7.3 -type d -exec chmod 775 {} \;
 find ./ -type d -exec chmod 775 {} \;
 
 #   Extract and update owner
-tar -zxvf jdk-8u111-linux-x64.tar.gz
+tar -zxvf jdk-8u111-linux-x64.tar.gz -C /home/gv8/install
 chown -R root:hadoop ./jdk1.8.0_111
 rm -f /usr/bin/java
 rm -f /usr/bin/javac
